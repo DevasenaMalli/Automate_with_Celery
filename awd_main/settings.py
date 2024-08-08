@@ -11,6 +11,13 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 """
 
 from pathlib import Path
+from decouple import config
+import ssl
+import certifi
+from django.core.mail import send_mail
+from decouple import config
+import os
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -20,10 +27,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-vyr1+vk7nbdw%-vpx511_l$%om^=9urp0_uo7usag+kw!grh_r'
+SECRET_KEY = config('SECRET_KEY')          #config('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = config('DEBUG',default=False, cast=bool)
 
 ALLOWED_HOSTS = []
 
@@ -118,6 +125,11 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
 
 STATIC_URL = 'static/'
+STATIC_ROOT = BASE_DIR/'static'
+
+STATICFILES_DIRS = [
+    'awd_main/static',
+    ]
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
@@ -133,3 +145,33 @@ MESSAGE_TAGS = {
     messages.ERROR: "danger",
     50: "critical",
 }
+
+# CELERY SETTINGS
+CELERY_BROKER_URL = 'redis://localhost:6379'
+# CELERY_RESULT_BACKEND = 'redis://localhost:6379/0'
+# CELERY_ACCEPT_CONTENT = ['json']
+# CELERY_TASK_SERIALIZER = 'json'
+# CELERY_RESULT_SERIALIZER = 'json'
+
+
+
+# #Email configraton
+EMAIL_BACKEND = 'awd_main.backends.SSLEmailBackend'
+EMAIL_HOST = config('EMAIL_HOST')
+EMAIL_PORT = config('EMAIL_PORT', cast=int)
+EMAIL_HOST_USER = config('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
+EMAIL_USE_TLS = True
+DEFAULT_FROM_EMAIL = 'Automate with Django <devasena1090@gmail.com>'
+DEFAULT_TO_EMAIL = 'devasena.malli@gmail.com'
+
+
+# EMAIL_BACKEND = 'awd_main.backends.SSLEmailBackend'  # Use the custom backend if needed
+# EMAIL_HOST = 'smtp.gmail.com'
+# EMAIL_PORT = 587
+# EMAIL_HOST_USER = 'devasena1090@gmail.com'
+# EMAIL_HOST_PASSWORD = 'mhyxbfgnvcwpmebo'
+
+# EMAIL_USE_TLS = True
+# DEFAULT_FROM_EMAIL = 'devasena1090@gmail.com'
+# DEFAULT_TO_EMAIL = 'devasena.malli@gmail.com'

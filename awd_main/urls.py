@@ -23,6 +23,7 @@ from django.conf import settings
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('',views.home, name='home'),
+    path('celery-test/', views.celery_test),
     path('', include('dataentry.urls')),
 
 
